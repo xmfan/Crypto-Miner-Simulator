@@ -33,6 +33,8 @@ def animate(buf, img, font):
 
 
 NO_FACE = False 
+incremented = False
+SAVE_PHOTOS = False
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 90);
@@ -190,6 +192,7 @@ while(True):
             if buffering:
                 if np.all(list(angle_buffer.values())):
                     THC += 1
+                    incremented = True
                     reset(angle_buffer)
                     buffering = False
                     mine(anim_buf, pos)
@@ -245,6 +248,12 @@ while(True):
 
             cv2.putText(debug, 'THC: {}'.format(THC), (100,600), font, 1, (0,255,0), 2)
             cv2.imshow('debug', debug)
+
+            if incremented and SAVE_PHOTOS:
+                incremented = False
+                # save photos
+                cv2.imwrite('saved/output/{}.jpg'.format(time.time()), output)
+                cv2.imwrite('saved/debug/{}.jpg'.format(time.time()), debug)
 
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
